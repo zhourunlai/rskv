@@ -3,6 +3,11 @@ name = "workshop"
 version = "0.1.0"
 authors = ["zhourunlai <xiaorun95@gmail.com>"]
 edition = "2018"
+repository = "https://github.com/zhourunlai/rskv"
+readme = "README.md"
+license = "MIT"
+description = "A key-value store in pure rust."
+keywords = ["rskv", "actix-web", "evmap", "rust"]
 
 [dependencies]
 actix-web = "1.0.0"

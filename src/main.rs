@@ -1,4 +1,4 @@
-use actix_web::{web, App, HttpServer, Responder};
+use actix_web::{middleware, web, App, HttpServer, Responder};
 use evmap::{ReadHandle, WriteHandle};
 use std::sync::{Arc, Mutex};
 
@@ -40,6 +40,7 @@ fn main() -> std::io::Result<()> {
 
     HttpServer::new(move || {
         App::new()
+            .wrap(middleware::Logger::default())
             .data(KvMap {
                 read_handle: map_r.clone(),
                 write_handle: map_w.clone(),
