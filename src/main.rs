@@ -21,10 +21,17 @@ fn kv_get(map: web::Data<KvMap>, param: web::Path<String>) -> impl Responder {
 fn kv_set(map: web::Data<KvMap>, param: web::Path<(String, String)>) -> impl Responder {
     let mut write_handle = map.write_handle.lock().unwrap();
     let (key, value) = (&param.0, &param.1);
-
     write_handle.update(key.to_owned(), value.to_owned());
     write_handle.refresh();
     format!("Set key {} = {}", key, value)
+}
+
+fn kv_del(map: web::Data<KvMap>, param: web::Path<String>) -> impl Responder {
+    let mut write_handle = map.write_handle.lock().unwrap();
+    let key = &*param;
+    write_handle.empty(key.to_owned());
+    write_handle.refresh();
+    format!("Del key {}", key)
 }
 
 fn main() -> std::io::Result<()> {
@@ -40,6 +47,7 @@ fn main() -> std::io::Result<()> {
             .service(web::resource("/").to(index))
             .service(web::resource("/get/{key}").to(kv_get))
             .service(web::resource("/set/{key}/{value}").to(kv_set))
+            .service(web::resource("/del/{key}").to(kv_del))
     })
     .bind("0.0.0.0:8088")?
     .run()
